@@ -14,7 +14,7 @@ const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const app = express();
 
 app.use(cors({
-  origin: ['https://samachar-prabhah.vercel.app', 'http://localhost:3000'],
+  origin: ['https://shamachar-prabhah.vercel.app', 'http://localhost:3000'],
   credentials: true
 }));
 
