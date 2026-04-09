@@ -13,19 +13,21 @@ const bookmarkRoutes = require('./routes/bookmarkRoutes');
 
 const app = express();
 
-const allowedOrigins = [
-  'https://shamachar-prabhah.vercel.app',
-  'http://localhost:3000',
-];
+// Disable ETag caching
+app.set('etag', false);
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (Postman, mobile apps, etc.)
     if (!origin) return callback(null, true);
-    // Allow any vercel.app subdomain or exact matches
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
-      return callback(null, true);
-    }
+    if (origin.startsWith('http://localhost')) return callback(null, true);
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+    if (origin.endsWith('.netlify.app')) return callback(null, true);
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true
