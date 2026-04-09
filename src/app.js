@@ -13,8 +13,21 @@ const bookmarkRoutes = require('./routes/bookmarkRoutes');
 
 const app = express();
 
+const allowedOrigins = [
+  'https://shamachar-prabhah.vercel.app',
+  'http://localhost:3000',
+];
+
 app.use(cors({
-  origin: ['https://shamachar-prabhah.vercel.app', 'http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (Postman, mobile apps, etc.)
+    if (!origin) return callback(null, true);
+    // Allow any vercel.app subdomain or exact matches
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 

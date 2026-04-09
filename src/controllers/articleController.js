@@ -4,7 +4,7 @@ const slugify = require('../utils/slugify');
 // Create article
 exports.createArticle = async (req, res, next) => {
   try {
-    const { title, content, category, subcategory, slayout, thumbnail, authorName } = req.body;
+    const { title, content, category, subcategory, slayout, thumbnail, authorName, videoUrl } = req.body;
     if (!title || !content || !category) return res.status(400).json({ message: "Title, content, category required" });
 
     const article = await Article.create({
@@ -15,6 +15,7 @@ exports.createArticle = async (req, res, next) => {
       subcategory,
       slayout: slayout || 'default',
       thumbnail,
+      videoUrl: videoUrl || '',
       author: req.user._id
     });
 
@@ -63,7 +64,7 @@ exports.updateArticle = async (req, res, next) => {
 exports.deleteArticle = async (req, res, next) => {
   try {
     const article = await Article.findByIdAndDelete(req.params.id);
-    if (!article) return res.status(404).json({ message: "Article not found" })
+    if (!article) return res.status(404).json({ message: "Article not found" });
     res.json({ message: "Article deleted" });
   } catch (err) { next(err); }
 };

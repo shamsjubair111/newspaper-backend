@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 const ArticleSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  authorName: { type: String, default: '' },  // ← ADD THIS
+  authorName: { type: String, default: '' },
   content: { type: String, required: true },
   thumbnail: { type: String },
+  videoUrl: { type: String, default: '' },  // YouTube or direct video URL
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
   subcategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Subcategory' },
