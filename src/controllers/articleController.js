@@ -46,14 +46,19 @@ exports.getArticleById = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// Update article
+// Update article (admin only)
 exports.updateArticle = async (req, res, next) => {
   try {
     const article = await Article.findById(req.params.id);
     if (!article) return res.status(404).json({ message: "Article not found" });
 
-    Object.assign(article, req.body);
-    if (req.body.title) article.slug = slugify(req.body.title);
+    // Whitelist only safe fields
+    const allowedFields = ['title', 'authorName', 'content', 'thumbnail', 'videoUrl', 'category', 'subcategory', 'slayout'];
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) article[field] = req.body[field];
+    });
+
+    article.updatedAt = Date.now();
     await article.save();
 
     res.json(article);

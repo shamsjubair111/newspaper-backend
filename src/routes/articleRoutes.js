@@ -15,7 +15,7 @@ router.get('/:id', getArticleById);
 
 // Author/Admin: create/update/delete
 router.post('/', authMiddleware, authorizeRoles('author','admin'), createArticle);
-router.put('/:id', authMiddleware, authorizeRoles('author','admin'), updateArticle);
+router.put('/:id', authMiddleware, authorizeRoles('admin'), updateArticle);
 router.delete('/:id', authMiddleware, authorizeRoles('author','admin'), deleteArticle);
 
 module.exports = router;
