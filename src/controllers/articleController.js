@@ -4,12 +4,13 @@ const slugify = require('../utils/slugify');
 // Create article
 exports.createArticle = async (req, res, next) => {
   try {
-    const { title, content, category, subcategory, slayout, thumbnail, authorName, videoUrl } = req.body;
-    if (!title || !content || !category) return res.status(400).json({ message: "Title, content, category required" });
+    const { title, articleAuthor, content, category, subcategory, slayout, thumbnail, videoUrl } = req.body;
+    if (!title || !content || !category || !articleAuthor)
+      return res.status(400).json({ message: 'Title, content, category, and articleAuthor are required' });
 
     const article = await Article.create({
       title,
-      authorName: authorName || '',
+      articleAuthor,
       content,
       category,
       subcategory,
@@ -28,6 +29,7 @@ exports.getArticles = async (req, res, next) => {
   try {
     const articles = await Article.find()
       .populate('author', 'name email')
+      .populate('articleAuthor', 'name profession image')
       .populate('category', 'name slug')
       .populate('subcategory', 'name slug');
     res.json(articles);
@@ -39,6 +41,7 @@ exports.getArticleById = async (req, res, next) => {
   try {
     const article = await Article.findById(req.params.id)
       .populate('author', 'name email')
+      .populate('articleAuthor', 'name profession image')
       .populate('category', 'name slug')
       .populate('subcategory', 'name slug');
     if (!article) return res.status(404).json({ message: "Article not found" });
@@ -52,8 +55,7 @@ exports.updateArticle = async (req, res, next) => {
     const article = await Article.findById(req.params.id);
     if (!article) return res.status(404).json({ message: "Article not found" });
 
-    // Whitelist only safe fields
-    const allowedFields = ['title', 'authorName', 'content', 'thumbnail', 'videoUrl', 'category', 'subcategory', 'slayout'];
+    const allowedFields = ['title', 'articleAuthor', 'content', 'thumbnail', 'videoUrl', 'category', 'subcategory', 'slayout'];
     allowedFields.forEach(field => {
       if (req.body[field] !== undefined) article[field] = req.body[field];
     });

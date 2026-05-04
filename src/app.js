@@ -10,6 +10,7 @@ const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
+const authorRoutes   = require('./routes/authorRoutes');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api/subcategories', subcategoryRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
+app.use('/api/authors',   authorRoutes);
 
 app.get("/test", (req, res) => {
   res.json({ message: "Backend is working!" });
