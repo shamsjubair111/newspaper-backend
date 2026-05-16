@@ -4,7 +4,7 @@ const slugify = require('../utils/slugify');
 // Create article
 exports.createArticle = async (req, res, next) => {
   try {
-    const { title, articleAuthor, content, category, subcategory, slayout, thumbnail, videoUrl } = req.body;
+    const { title, articleAuthor, content, category, subcategory, slayout, thumbnail, images, videoUrl } = req.body;
     if (!title || !content || !category || !articleAuthor)
       return res.status(400).json({ message: 'Title, content, category, and articleAuthor are required' });
 
@@ -16,6 +16,7 @@ exports.createArticle = async (req, res, next) => {
       subcategory,
       slayout: slayout || 'default',
       thumbnail,
+      images: Array.isArray(images) ? images.filter(Boolean) : [],
       videoUrl: videoUrl || '',
       author: req.user._id
     });
@@ -55,7 +56,10 @@ exports.updateArticle = async (req, res, next) => {
     const article = await Article.findById(req.params.id);
     if (!article) return res.status(404).json({ message: "Article not found" });
 
-    const allowedFields = ['title', 'articleAuthor', 'content', 'thumbnail', 'videoUrl', 'category', 'subcategory', 'slayout'];
+    const allowedFields = ['title', 'articleAuthor', 'content', 'thumbnail', 'images', 'videoUrl', 'category', 'subcategory', 'slayout'];
+    if (req.body.images !== undefined && Array.isArray(req.body.images)) {
+      req.body.images = req.body.images.filter(Boolean);
+    }
     allowedFields.forEach(field => {
       if (req.body[field] !== undefined) article[field] = req.body[field];
     });

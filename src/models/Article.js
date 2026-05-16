@@ -5,6 +5,7 @@ const ArticleSchema = new mongoose.Schema({
   articleAuthor: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true },
   content:       { type: String, required: true },
   thumbnail:     { type: String },
+  images:        { type: [String], default: [] },
   videoUrl:      { type: String, default: '' },
   author:        { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   category:      { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
